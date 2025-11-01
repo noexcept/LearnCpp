@@ -1,0 +1,1 @@
+add_cpp_demo(std_variant)
