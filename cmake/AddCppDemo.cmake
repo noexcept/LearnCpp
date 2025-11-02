@@ -6,32 +6,33 @@ function(add_cpp_demo DEMO_NAME)
     set(oneValueArgs "")
     set(multiValueArgs SOURCES)
     cmake_parse_arguments(DEMO "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    
+
     # 如果没有指定源文件，尝试自动查找
     if(NOT DEMO_SOURCES)
-        file(GLOB_RECURSE DEMO_SOURCES 
+        file(GLOB_RECURSE DEMO_SOURCES
             "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/*.cc"
             "${CMAKE_CURRENT_SOURCE_DIR}/*.cxx"
+            "${CMAKE_CURRENT_SOURCE_DIR}/*.cppm"
         )
     endif()
-    
+
     # 如果仍然没有找到源文件，创建一个默认的
     if(NOT DEMO_SOURCES)
         set(DEMO_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${DEMO_NAME}/main.cpp")
     endif()
-    
+
     # 创建可执行文件
     add_executable(${DEMO_NAME} ${DEMO_SOURCES})
-    
+
     # 设置目标属性
     target_compile_features(${DEMO_NAME} PRIVATE cxx_std_20)
-    
+
     # 添加到测试组（可选）
     if(BUILD_TESTING)
         add_test(NAME ${DEMO_NAME} COMMAND ${DEMO_NAME})
     endif()
-    
+
     # 安装规则（可选）
     install(TARGETS ${DEMO_NAME} DESTINATION bin)
 endfunction()
